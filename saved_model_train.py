@@ -64,10 +64,10 @@ print("dataset_test_X :",dataset_test_X.shape)
 test_X_new = dataset_test_X.reshape(1,dataset_test_X.shape[0],dataset_test_X.shape[1])
 print(test_X_new.shape)
 
-# y_pred = model.predict(test_X_new)
+y_pred = model.predict(test_X_new)
 
-# y_pred_inv = scaler.inverse_transform(y_pred)
-# y_pred_inv = y_pred_inv.reshape(n_steps_out,1)
-# y_pred_inv = y_pred_inv[:,0]
-# print("y_pred :",y_pred.shape)
-# print("y_pred_inv :",y_pred_inv.shape)
+y_pred_inv = scaler.inverse_transform(y_pred)
+y_pred_inv = y_pred_inv.reshape(n_steps_out,1)
+y_pred_inv = y_pred_inv[:,0]
+print("y_pred :",y_pred.shape)
+print("y_pred_inv :",y_pred_inv.shape)
