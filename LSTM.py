@@ -22,10 +22,9 @@ from numpy import array , hstack
 from tensorflow import keras
 import tensorflow as tf
 
-dataset = pd.read_csv("Dataset/LSTM-Multivariate_pollution.csv", header=0, index_col=0)
+dataset = pd.read_csv("Dataset/LSTM-Multivariate_pollution.csv", header=0, index_col=0 ,parse_dates=True)
 
 t = dataset.columns.tolist()
-print(t)
 dataset = dataset[['dew', 'temp', 'press', 'wnd_dir', 'wnd_spd', 'snow', 'rain','pollution']]
 print(dataset)
 
@@ -108,6 +107,8 @@ def split_sequences(sequences, n_steps_in, n_steps_out):
 n_steps_in, n_steps_out = 60 , 30
 # covert into input/output
 X, y = split_sequences(dataset_stacked, n_steps_in, n_steps_out)
+print(X[0])
+print(y[0])
 print ("X.shape" , X.shape) 
 print ("y.shape" , y.shape)
 
@@ -121,10 +122,10 @@ train_X, test_X,train_y, test_y = train_test_split(X, y, test_size = 0.2, random
 #test_X , test_y = X[split_point:, :] , y[split_point:, :]
 
 
-train_X.shape #[n_datasets,n_steps_in,n_features]
-train_y.shape #[n_datasets,n_steps_out]
-test_X.shape 
-test_y.shape 
+print(train_X.shape) #[n_datasets,n_steps_in,n_features]
+print(train_y.shape) #[n_datasets,n_steps_out]
+print(test_X.shape) 
+print(test_y.shape) 
 n_features = 7
 #number of features
 #n_features = 2
@@ -142,4 +143,4 @@ model.compile(loss='mse' , optimizer=opt , metrics=['accuracy'])
 
 # Fit network #increase the epochs for better model training
 history = model.fit(train_X , train_y , epochs=500, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
-model.save('new_saved_model/Air_Pollution.h5')
+model.save('saved_mode/Air_Pollution')

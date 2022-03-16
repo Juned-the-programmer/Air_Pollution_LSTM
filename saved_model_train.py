@@ -5,8 +5,8 @@ from sklearn.preprocessing import LabelEncoder , OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler
 from numpy import array , hstack
 
-# model = load_model("saved_model/Air_Pollution")
-# print(model.summary())
+model = load_model("saved_model/Air_Pollution")
+print(model.summary())
 
 dataset_test_ok = pd.read_csv('Dataset/pollution_test_data1.csv')
 dataset_test_ok.head()
@@ -54,20 +54,24 @@ dataset_test_stacked = hstack((x1_test_scaled,x2_test_scaled,x3_test_scaled,x4_t
 
 print ("dataset_stacked.shape" , dataset_test_stacked.shape)
 
+print(dataset_test_stacked.shape[0])
+print(dataset_test_stacked.shape[1])
 
-
+n_steps_out = 30
 
 ###Prediction#######################################################
 
 dataset_test_X = dataset_test_stacked
 print("dataset_test_X :",dataset_test_X.shape)  
-test_X_new = dataset_test_X.reshape(1,dataset_test_X.shape[0],dataset_test_X.shape[1])
-print(test_X_new.shape)
+test_X_new = dataset_test_X.reshape(1,dataset_test_stacked.shape[0],dataset_test_X.shape[1])
+
+print(test_X_new)
 
 y_pred = model.predict(test_X_new)
+print(y_pred)
 
 y_pred_inv = scaler.inverse_transform(y_pred)
 y_pred_inv = y_pred_inv.reshape(n_steps_out,1)
 y_pred_inv = y_pred_inv[:,0]
 print("y_pred :",y_pred.shape)
-print("y_pred_inv :",y_pred_inv.shape)
+print("y_pred_inv :",y_pred_inv.shape)  
