@@ -22,7 +22,7 @@ from numpy import array , hstack
 from tensorflow import keras
 import tensorflow as tf
 
-dataset = pd.read_csv("Dataset/LSTM-Multivariate_pollution.csv", header=0, index_col=0 ,parse_dates=True)
+dataset = pd.read_csv("Dataset/LSTM-Multivariate_pollution.csv", header=0, parse_dates=True)
 
 t = dataset.columns.tolist()
 dataset = dataset[['dew', 'temp', 'press', 'wnd_dir', 'wnd_spd', 'snow', 'rain','pollution']]
@@ -42,6 +42,7 @@ dataset.columns = ['dew', 'temp', 'press', 'wnd_dir', 'wnd_spd', 'snow', 'rain',
 ######## ensure all data is float
 
 #Data Pre-processing step--------------------------------
+# x_0 = dataset['date'].values
 x_1 = dataset['dew'].values
 x_2 = dataset['temp'].values
 x_3 = dataset['press'].values
@@ -56,6 +57,7 @@ y = dataset['pollution'].values
 
 
 # Step 1 : convert to [rows, columns] structure
+# x_0 = x_0.reshape((len(x_0) , 1))
 x_1 = x_1.reshape((len(x_1), 1))
 x_2 = x_2.reshape((len(x_2), 1))
 x_3 = x_3.reshape((len(x_3), 1))
@@ -68,8 +70,13 @@ print ("x_1.shape" , x_1.shape)
 print ("x_2.shape" , x_2.shape) 
 print ("y.shape" , y.shape)
 
+# dataset_stacked = hstack((x_0 , x_1, x_2, x_3, x_4,
+#                           x_5, x_6, x_7, y))
+# print(dataset_stacked)
+
 # Step 2 : normalization 
 scaler = MinMaxScaler(feature_range=(0, 1))
+# x_0_scaled = scaler.fit_transform(x_0)
 x_1_scaled = scaler.fit_transform(x_1)
 x_2_scaled = scaler.fit_transform(x_2)
 x_3_scaled = scaler.fit_transform(x_3)
@@ -83,6 +90,7 @@ y_scaled = scaler.fit_transform(y)
 dataset_stacked = hstack((x_1_scaled, x_2_scaled, x_3_scaled, x_4_scaled,
                           x_5_scaled, x_6_scaled, x_7_scaled, y_scaled))
 print ("dataset_stacked.shape" , dataset_stacked.shape)
+print(dataset_stacked)
 
 #1. n_steps_in : Specify how much data we want to look back for prediction
 #2. n_step_out : Specify how much multi-step data we want to forecast
@@ -104,11 +112,9 @@ def split_sequences(sequences, n_steps_in, n_steps_out):
     return array(X), array(y)
 
 # choose a number of time steps #change this accordingly
-n_steps_in, n_steps_out = 60 , 30
+n_steps_in, n_steps_out = 74 , 24
 # covert into input/output
 X, y = split_sequences(dataset_stacked, n_steps_in, n_steps_out)
-print(X[0])
-print(y[0])
 print ("X.shape" , X.shape) 
 print ("y.shape" , y.shape)
 
@@ -143,4 +149,4 @@ model.compile(loss='mse' , optimizer=opt , metrics=['accuracy'])
 
 # Fit network #increase the epochs for better model training
 history = model.fit(train_X , train_y , epochs=500, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
-model.save('saved_mode/Air_Pollution')
+model.save('saved_mode_(74,24)/Air_Pollution.h5')
