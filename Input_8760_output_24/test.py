@@ -5,16 +5,14 @@ from sklearn.preprocessing import LabelEncoder , OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler
 from numpy import array , hstack
 
-model = load_model("Model of 74 , 24/saved_model(74,24)/Air_Pollution.h5")
+model = load_model("saved_model/Air_Pollution.h5")
 print(model.summary())
 
-dataset_test_ok = pd.read_csv('Dataset/new_test_data.csv')
+dataset_test_ok = pd.read_csv('test.csv')
 dataset_test_ok.head()
 
-# integer encode direction
 encoder1 = LabelEncoder()
 dataset_test_ok.iloc[:,3] = encoder1.fit_transform(dataset_test_ok.iloc[:,3])
-
 
 # read test data
 x1_test = dataset_test_ok['dew'].values
@@ -45,6 +43,7 @@ x4_test_scaled = scaler.fit_transform(x4_test)
 x5_test_scaled = scaler.fit_transform(x5_test)
 x6_test_scaled = scaler.fit_transform(x6_test)
 x7_test_scaled = scaler.fit_transform(x7_test)
+
 
 # Step 3 : horizontally stack columns
 dataset_test_stacked = hstack((x1_test_scaled,x2_test_scaled,x3_test_scaled,x4_test_scaled,x5_test_scaled,x6_test_scaled,x7_test_scaled))
@@ -85,12 +84,11 @@ y_pred = model.predict(test_X_new)
 print("Prediction of the data")
 print(y_pred)
 
-print("Inverse of the prediction data")
 y_pred_inv = scaler.inverse_transform(y_pred)
-print(y_pred_inv)
+print("Inverse of the prediction data")
 y_pred_inv = y_pred_inv.reshape(24,1)
-print(y_pred_inv)
-y_pred_inv = y_pred_inv[:,0]
-print(y_pred_inv)
-print("y_pred :",y_pred.shape)
-print("y_pred_inv :",y_pred_inv.shape)  
+print(y_pred_inv*1000)
+# y_pred_inv = y_pred_inv[:,0]
+# # print(y_pred_inv)
+# print("y_pred :",y_pred.shape)
+# print("y_pred_inv :",y_pred_inv.shape)  

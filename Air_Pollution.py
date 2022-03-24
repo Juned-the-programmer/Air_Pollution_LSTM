@@ -90,6 +90,7 @@ plt.show()
 
 # make a prediction
 yhat = model.predict(test_X)
+print(yhat)
 test_X = test_X.reshape((test_X.shape[0], test_X.shape[2]))
 # invert scaling for forecast
 inv_yhat = np.concatenate((yhat, test_X[:, 1:]), axis=1)
@@ -101,7 +102,7 @@ inv_y = np.concatenate((test_y, test_X[:, 1:]), axis=1)
 inv_y = scaler.inverse_transform(inv_y)
 inv_y = inv_y[:,0]
 print(inv_y)
-print(scaler.inverse_transform(test_y))
+print(inv_yhat)
 # calculate RMSE
 from math import sqrt
 rmse = sqrt(mean_squared_error(inv_y, inv_yhat))
