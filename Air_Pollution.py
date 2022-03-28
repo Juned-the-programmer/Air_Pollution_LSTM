@@ -101,7 +101,7 @@ test_y = test_y.reshape((len(test_y), 1))
 inv_y = np.concatenate((test_y, test_X[:, 1:]), axis=1)
 inv_y = scaler.inverse_transform(inv_y)
 inv_y = inv_y[:,0]
-print(inv_y)
+print(inv_y.shape)
 print(inv_yhat)
 # calculate RMSE
 from math import sqrt

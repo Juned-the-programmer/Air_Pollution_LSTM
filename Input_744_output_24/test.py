@@ -5,7 +5,7 @@ from sklearn.preprocessing import LabelEncoder , OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler
 from numpy import array , hstack
 
-model = load_model("saved_model/Air_Pollution.h5")
+model = load_model("Air_Pollution_output_24/Air_Pollution.h5")
 print(model.summary())
 
 dataset_test_ok = pd.read_csv('test.csv')
@@ -86,7 +86,7 @@ print(y_pred)
 
 y_pred_inv = scaler.inverse_transform(y_pred)
 print("Inverse of the prediction data")
-y_pred_inv = y_pred_inv.reshape(24,1)
+# y_pred_inv = y_pred_inv.reshape(24,1)
 print(y_pred_inv*1000)
 # y_pred_inv = y_pred_inv[:,0]
 # # print(y_pred_inv)
