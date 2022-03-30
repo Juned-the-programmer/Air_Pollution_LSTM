@@ -10,8 +10,8 @@ from numpy import mean , concatenate
 from math import sqrt
 from pandas import read_csv
 from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense,LSTM,Activation
+from tensorflow.keras.models import Sequential 
+from tensorflow.keras.layers import Dense,LSTM,Activation,Dropout , Bidirectional , GRU
 
 from sklearn.preprocessing import LabelEncoder , OneHotEncoder
 
@@ -112,7 +112,7 @@ def split_sequences(sequences, n_steps_in, n_steps_out):
     return array(X), array(y)
 
 # choose a number of time steps #change this accordingly
-n_steps_in, n_steps_out = 74 , 24
+n_steps_in, n_steps_out = 360 , 24
 # covert into input/output
 X, y = split_sequences(dataset_stacked, n_steps_in, n_steps_out)
 print ("X.shape" , X.shape) 
@@ -136,17 +136,22 @@ n_features = 7
 #number of features
 #n_features = 2
 
-#optimizer learning rate
-opt = keras.optimizers.Adam(learning_rate=0.0001)
-# define model
 model = Sequential()
-model.add(LSTM(50, activation='relu', return_sequences=True, input_shape=(n_steps_in, n_features)))
-model.add(LSTM(50, activation='relu'))
+# model.add(Bidirectional(LSTM(50, activation='tanh' , input_shape=(n_steps_in, n_features))))
+model.add(GRU(70, activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True , input_shape=(n_steps_in, n_features)))
+model.add(Dropout(0.2))
+model.add(GRU(70 , activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True ))
+model.add(Dropout(0.2))
+model.add(GRU(70 , activation='tanh' , recurrent_activation='sigmoid'))
 model.add(Dense(n_steps_out))
 model.add(Activation('linear'))
-model.compile(loss='mse' , optimizer=opt , metrics=['accuracy'])
+model.compile(loss='mae', optimizer='adam' , metrics=['accuracy'])
 
+# fit network
+history = model.fit(train_X, train_y, epochs=300, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False)
+model.save("Air_Pollution_output_24/Air_Pollution.h5")
 
-# Fit network #increase the epochs for better model training
-history = model.fit(train_X , train_y , epochs=500, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
-model.save('saved_mode_(74,24)/Air_Pollution.h5')
+plt.plot(history.history['loss'], label='train')
+plt.plot(history.history['val_loss'], label='test')
+plt.legend()
+plt.show()

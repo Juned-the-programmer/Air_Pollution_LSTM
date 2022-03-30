@@ -152,12 +152,16 @@ n_features = 7
 # history = model.fit(train_X , train_y , epochs=20 , batch_size=72 ,verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
 # model.save('saved_model/Air_Pollution.h5')  
 
+opt = keras.optimizers.SGD(learning_rate=0.01)
 model = Sequential()
-model.add(Bidirectional(LSTM(50, activation='tanh' , input_shape=(n_steps_in, n_features))))
+model.add(Bidirectional(LSTM(70, activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True , input_shape=(n_steps_in, n_features))))
 model.add(Dropout(0.2))
+model.add(LSTM(50 , activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True))
+model.add(Dropout(0.2))
+model.add(LSTM(50 , activation='tanh' , recurrent_activation='sigmoid'))
 model.add(Dense(n_steps_out))
 model.add(Activation('linear'))
-model.compile(loss='mae', optimizer='adam' , metrics=['accuracy'])
+model.compile(loss='mae', optimizer=opt , metrics=['accuracy'])
 
 checkpoint_filepath = "/tmp/checkpoint"
 model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
@@ -168,7 +172,7 @@ model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
     save_best_only=True)
 
 # fit network
-history = model.fit(train_X, train_y, epochs=100, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False , callbacks=[model_checkpoint_callback])
+history = model.fit(train_X, train_y, epochs=200, batch_size=72, validation_data=(test_X, test_y), verbose=2, shuffle=False , callbacks=[model_checkpoint_callback])
 model.save("Air_Pollution_output_24/Air_Pollution.h5")
 
 plt.plot(history.history['loss'], label='train')
