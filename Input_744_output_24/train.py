@@ -137,15 +137,15 @@ n_features = 7
 #n_features = 2
 
 #optimizer learning rate
-opt = keras.optimizers.Adam(learning_rate=0.0001)
-# define model
-model = Sequential()
-model.add(LSTM(50 , activation='relu' , return_sequences=True, input_shape=(n_steps_in, n_features)))
-model.add(LSTM(50, activation='relu'))
-model.add(Dropout(rate=0.2))
-model.add(Dense(n_steps_out))
-model.add(Activation('linear'))
-model.compile(loss='mse' , optimizer=opt , metrics=['accuracy'])
+# opt = keras.optimizers.Adam(learning_rate=0.0001)
+# # define model
+# model = Sequential()
+# model.add(LSTM(50 , activation='relu' , return_sequences=True, input_shape=(n_steps_in, n_features)))
+# model.add(LSTM(50, activation='relu'))
+# model.add(Dropout(rate=0.2))
+# model.add(Dense(n_steps_out))
+# model.add(Activation('linear'))
+# model.compile(loss='mse' , optimizer=opt , metrics=['accuracy'])
 
 
 # # Fit network #increase the epochs for better model training
