@@ -73,14 +73,13 @@ print(reframed[:12])
 
 #split the data into input and output
 values = reframed.values
-n_train_hours = 365*24
-test = values[:n_train_hours,:]
+test = values[:8761,:]
 test_X, test_y = test[:, :-1], test[:, -1]
 print(test_X.shape)
 
 #Reshape into 3D
 test_X = test_X.reshape((test_X.shape[0], 1, test_X.shape[1]))
-
+print(test_X.shape)
 
 #Prediction
 prediction = model.predict(test_X)
