@@ -22,7 +22,7 @@ from numpy import array , hstack
 from tensorflow import keras
 import tensorflow as tf
 
-dataset = pd.read_csv("../Dataset/LSTM-Multivariate_pollution.csv", header=0, parse_dates=True)
+dataset = pd.read_csv("./Dataset/LSTM-Multivariate_pollution.csv", header=0, parse_dates=True)
 
 t = dataset.columns.tolist()
 dataset = dataset[['dew', 'temp', 'press', 'wnd_dir', 'wnd_spd', 'snow', 'rain','pollution']]
