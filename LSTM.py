@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 import statsmodels.api as sm
 from pandas import DataFrame , concat
 from sklearn.metrics import mean_absolute_error , mean_squared_error
@@ -38,6 +39,26 @@ dataset[:,3] = encoder.fit_transform(dataset[:,3])
 
 dataset = pd.DataFrame(dataset)
 dataset.columns = ['dew', 'temp', 'press', 'wnd_dir', 'wnd_spd', 'snow', 'rain','pollution']
+
+# specify columns to plot
+
+values = dataset.values
+
+groups = [1, 2, 3, 5, 6]
+i = 1
+
+# plot each column
+plt.figure(figsize=(20,14))
+for group in groups:
+    plt.subplot(len(groups), 1, i)
+    plt.plot(values[:, group], c = "forestgreen")
+    plt.title(dataset.columns[group], y=0.75, loc='right', fontsize = 15)
+    i += 1
+plt.show()
+
+plt.figure(figsize=(20,14))
+plt.plot(dataset.pollution[:360] , color='tab:red')
+plt.show()
 
 ######## ensure all data is float
 

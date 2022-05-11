@@ -1,6 +1,7 @@
 from keras.models import load_model
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder , OneHotEncoder
 from sklearn.preprocessing import MinMaxScaler
 from numpy import array , hstack
@@ -87,7 +88,14 @@ print(y_pred)
 y_pred_inv = scaler.inverse_transform(y_pred)
 print("Inverse of the prediction data")
 # y_pred_inv = y_pred_inv.reshape(24,1)
-print(y_pred_inv*1000)
+y_pred_inv = y_pred_inv*1000
+print(y_pred_inv)
+result = y_pred_inv.flatten()
+print(result)
+
+plt.figure(figsize=(20,14))
+plt.plot(result , color='red')
+plt.show()
 # y_pred_inv = y_pred_inv[:,0]
 # # print(y_pred_inv)
 # print("y_pred :",y_pred.shape)

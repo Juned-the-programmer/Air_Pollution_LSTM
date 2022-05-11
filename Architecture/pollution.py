@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import pandas as pd
 import statsmodels.api as sm
+import seaborn as sns
 from pandas import DataFrame , concat
 from sklearn.metrics import mean_absolute_error , mean_squared_error
 from numpy import mean , concatenate
@@ -11,7 +12,7 @@ from math import sqrt
 from pandas import read_csv
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense,LSTM,Activation
+from tensorflow.keras.layers import Dense,LSTM,Activation,GRU,Dropout
 
 from sklearn.preprocessing import LabelEncoder , OneHotEncoder
 
@@ -35,6 +36,30 @@ print(dataset)
 t = dataset.columns.tolist()
 dataset = dataset[['dew', 'temp', 'press', 'wnd_dir', 'wnd_spd', 'snow', 'rain','pollution' , 'year' , 'month' , 'day' , 'hour']]
 print(dataset)
+
+corr = dataset.corr()
+plt.figure(figsize=(20,14))
+plot = sns.heatmap(corr , annot=True)
+plt.show()
+
+values = dataset.values
+
+groups = [1, 2, 3, 5, 6]
+i = 1
+
+# plot each column
+plt.figure(figsize=(20,14))
+for group in groups:
+    plt.subplot(len(groups), 1, i)
+    plt.plot(values[:, group], c = "forestgreen")
+    plt.title(dataset.columns[group], y=0.75, loc='right', fontsize = 15)
+    i += 1
+plt.show()
+
+plt.figure(figsize=(20,14))
+plt.plot(dataset.pollution[:360] , color='tab:red')
+plt.show()
+
 
 #else slice is invalid for use in labelEncoder
 dataset= dataset.values
@@ -149,21 +174,48 @@ n_features = 11
 #n_features = 2
 
 #optimizer learning rate
-opt = keras.optimizers.Adam(learning_rate=0.0001)
+opt = keras.optimizers.Adam(learning_rate=0.001)
 # define model
 model = Sequential()
-model.add(LSTM(50, activation='relu',return_sequences=True, input_shape=(n_steps_in, n_features)))
-model.add(LSTM(50, activation='relu'))
+model.add(LSTM(50, activation='tanh',return_sequences=True, input_shape=(n_steps_in, n_features)))
+model.add(LSTM(50, activation='tanh' , return_sequences=True))
+model.add(Dropout(0.2))
+model.add(GRU(50 , activation='tanh' ))
+model.add(Dropout(0.2))
 model.add(Dense(n_steps_out))
 model.add(Activation('linear'))
 model.compile(loss='mse' , optimizer=opt , metrics=['accuracy'])
 
+print(model.summary())
+
 
 # # Fit network #increase the epochs for better model training
-history = model.fit(train_X , train_y , epochs=100, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
-model.save('saved_mode_(74,24)/Air_Pollution.h5')
+history = model.fit(train_X , train_y , epochs=200, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
+model.save('pollution/Air_Pollution.h5')
 
 plt.plot(history.history['loss'], label='train')
 plt.plot(history.history['val_loss'], label='test')
 plt.legend()
 plt.show()
+
+testPredict = model.predict(test_X)
+print(testPredict.shape)
+testPresict = testPredict.ravel()
+print(testPredict.shape)
+
+poll = np.array(dataset["pollution"])
+meaop = poll.mean()
+stdop = poll.std()
+y_test_true = y_test_true*stdop + meanop
+testPredict = testPredict*stdop + meanop
+
+plt.figure(figsize=(15,6))
+plt.xlim([1000,1250])
+plt.yalbel("ppm")
+plt.xlabel("hrs")
+plt.plot(y_test_true , c="g" , alpha=0.90 , linewidth=2.5)
+plt.plot(testPredict , c = "g" , alpha=0.75)
+plt.show()
+
+rmse = np.sqrt(mean_squared_error(y_test_true , testPredict))
+print("Test (Validation) RMSE = " , rmse)
