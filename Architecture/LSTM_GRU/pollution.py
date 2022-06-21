@@ -191,7 +191,7 @@ print(model.summary())
 
 # # Fit network #increase the epochs for better model training
 history = model.fit(train_X , train_y , epochs=200, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
-model.save('pollution/Air_Pollution.h5')
+model.save('Air_Pollution.h5')
 
 plt.plot(history.history['loss'], label='train')
 plt.plot(history.history['val_loss'], label='test')

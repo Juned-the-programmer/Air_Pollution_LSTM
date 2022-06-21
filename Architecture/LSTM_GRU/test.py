@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder , MinMaxScaler
 from numpy import hstack , array
 
-model = load_model("pollution/Air_Pollution.h5")
+model = load_model("Air_Pollution.h5")
 print(model.summary())
 
 dataset = pd.read_csv("test.csv" , header=0 , parse_dates=True)
