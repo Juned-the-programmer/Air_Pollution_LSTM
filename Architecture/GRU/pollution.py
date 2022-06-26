@@ -62,17 +62,16 @@ plt.show()
 
 
 #else slice is invalid for use in labelEncoder
+print(dataset.wnd_dir.unique())
 dataset= dataset.values
 # integer encode direction
 encoder = LabelEncoder()
 dataset[:,3] = encoder.fit_transform(dataset[:,3])
-
 # #conver to pd.Dataframe else slices error
 
 dataset = pd.DataFrame(dataset)
 dataset.columns = ['dew', 'temp', 'press', 'wnd_dir', 'wnd_spd', 'snow', 'rain','pollution' , 'year' , 'month' , 'day' , 'hour']
 print(dataset)
-
 ######## ensure all data is float
 
 #Data Pre-processing step--------------------------------
@@ -90,6 +89,21 @@ x_10 = dataset['day'].values
 x_11 = dataset['hour'].values
 y = dataset['pollution'].values
 
+#Scatter plot before data transformation
+figure , axis = plt.subplots(2,2)
+axis[0,0].plot(x_1 , y)
+axis[0,0].set_title("Dew vs Pollution")
+
+axis[0,1].plot(x_2 , y)
+axis[0,1].set_title("Temp vs Pollution")
+
+axis[1,0].plot(x_3 , y)
+axis[1,0].set_title("Press vs Pollution")
+
+axis[1,1].plot(x_4 , y)
+axis[1,1].set_title("Wind Speed vs Pollution")
+
+plt.show()
 
 # # Step 1 : convert to [rows, columns] structure
 # # x_0 = x_0.reshape((len(x_0) , 1))
@@ -107,8 +121,8 @@ x_11 = x_11.reshape((len(x_11), 1))
 y = y.reshape((len(y), 1))
 
 # Step 2 : normalization 
-scaler = MinMaxScaler(feature_range=(0, 1))
 # x_0_scaled = scaler.fit_transform(x_0)
+scaler = MinMaxScaler(feature_range=(0, 1))
 x_1_scaled = scaler.fit_transform(x_1)
 x_2_scaled = scaler.fit_transform(x_2)
 x_3_scaled = scaler.fit_transform(x_3)
@@ -122,12 +136,37 @@ x_10_scaled = scaler.fit_transform(x_10)
 x_11_scaled = scaler.fit_transform(x_11)
 y_scaled = scaler.fit_transform(y)
 
+figure , axis = plt.subplots(2,2)
+axis[0,0].plot(x_1_scaled , y_scaled)
+axis[0,0].set_title("Dew vs Pollution")
+
+axis[0,1].plot(x_2_scaled , y_scaled)
+axis[0,1].set_title("Temp vs Pollution")
+
+axis[1,0].plot(x_3_scaled , y_scaled)
+axis[1,0].set_title("Press vs Pollution")
+
+axis[1,1].plot(x_4_scaled , y_scaled)
+axis[1,1].set_title("Wind Speed vs Pollution")
+
+plt.show()
+
+plt.figure(figsize=(20,14))
+plt.plot(y_scaled[:360] , color='tab:red')
+plt.show()
+
+
 # Step 3 : horizontally stack columns
 dataset_stacked = hstack((x_1_scaled, x_2_scaled, x_3_scaled, x_4_scaled,
                           x_5_scaled, x_6_scaled, x_7_scaled, x_8_scaled ,
                           x_9_scaled, x_10_scaled , x_11_scaled, y_scaled))
 print ("dataset_stacked.shape" , dataset_stacked.shape)
 print(dataset_stacked)
+
+corr = dataset_stacked.corr()
+plt.figure(figsize=(20,14)) 
+plot = sns.heatmap(corr , annot=True)
+plt.show()
 
 #1. n_steps_in : Specify how much data we want to look back for prediction
 #2. n_step_out : Specify how much multi-step data we want to forecast
@@ -178,20 +217,20 @@ opt = keras.optimizers.Adam(learning_rate=0.001)
 # define model
 model = Sequential()
 # model.add(Bidirectional(LSTM(50, activation='tanh' , input_shape=(n_steps_in, n_features))))
-model.add(GRU(70, activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True , input_shape=(n_steps_in, n_features)))
+model.add(GRU(50, activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True , input_shape=(n_steps_in, n_features)))
 model.add(Dropout(0.2))
-model.add(GRU(70 , activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True ))
+model.add(GRU(50 , activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True ))
 model.add(Dropout(0.2))
-model.add(GRU(70 , activation='tanh' , recurrent_activation='sigmoid'))
+model.add(GRU(50 , activation='tanh' , recurrent_activation='sigmoid'))
 model.add(Dense(n_steps_out))
 model.add(Activation('linear'))
-model.compile(loss='mae', optimizer='adam' , metrics=['accuracy'])
+model.compile(loss='mae', optimizer=opt , metrics=['accuracy'])
 
 print(model.summary())
 
 
 # # Fit network #increase the epochs for better model training
-history = model.fit(train_X , train_y , epochs=200, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
+history = model.fit(train_X , train_y , epochs=300, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
 model.save('Air_Pollution.h5')
 
 plt.plot(history.history['loss'], label='train')

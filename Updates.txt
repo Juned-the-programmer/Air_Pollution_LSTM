@@ -1,0 +1,19 @@
+Add more content in the Introduction to the project.  []
+Update software and hardware requirements. []
+Add more literature review. []
+
+Information about dataset. [Done]
+Elaborate more about methodology (Add mathematical formulas) (Do the separate for LSTM and GRU) []
+Add more steps in the Implementation parts and explain that. []
+
+Results (Compare the model with our own models) (create a 3 or more models with different parameters) []
+conclusion []
+
+Add more about the LabelEncoder []
+
+
+
+https://towardsdatascience.com/gate-recurrent-units-explained-using-matrices-part-1-3c781469fc18
+https://12ft.io/proxy?q=http://towardsdatascience.com/lstm-networks-a-detailed-explanation-8fae6aefc7f9
+https://towardsdatascience.com/understanding-gru-networks-2ef37df6c9be
+https://www.analyticsvidhya.com/blog/2022/03/an-overview-on-long-short-term-memory-lstm/

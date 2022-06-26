@@ -178,18 +178,20 @@ opt = keras.optimizers.Adam(learning_rate=0.001)
 # define model
 model = Sequential()
 # model.add(Bidirectional(LSTM(50, activation='tanh' , input_shape=(n_steps_in, n_features))))
-model = Sequential()
-model.add(LSTM(50, activation='tanh', return_sequences=True, input_shape=(n_steps_in, n_features)))
-model.add(LSTM(50, activation='tanh'))
+model.add(LSTM(50, activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True , input_shape=(n_steps_in, n_features)))
 model.add(Dropout(0.2))
+model.add(LSTM(50 , activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True ))
+model.add(Dropout(0.2))
+model.add(LSTM(50 , activation='tanh' , recurrent_activation='sigmoid'))
 model.add(Dense(n_steps_out))
 model.add(Activation('linear'))
 model.compile(loss='mse' , optimizer=opt , metrics=['accuracy'])
+
 print(model.summary())
 
 
 # # Fit network #increase the epochs for better model training
-history = model.fit(train_X , train_y , epochs=200, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
+history = model.fit(train_X , train_y , epochs=300, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
 model.save('Air_Pollution.h5')
 
 plt.plot(history.history['loss'], label='train')
