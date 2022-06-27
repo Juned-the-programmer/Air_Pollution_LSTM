@@ -23,6 +23,8 @@ from numpy import array , hstack
 from tensorflow import keras
 import tensorflow as tf
 
+# TF_GPU_ALLOCATOR=cuda_malloc_async
+
 dataset = pd.read_csv("../Dataset/LSTM-Multivariate_pollution.csv", header=0, parse_dates=True)
 
 dataset['date'] = pd.to_datetime(dataset['date'])
@@ -217,11 +219,11 @@ opt = keras.optimizers.Adam(learning_rate=0.001)
 # define model
 model = Sequential()
 # model.add(Bidirectional(LSTM(50, activation='tanh' , input_shape=(n_steps_in, n_features))))
-model.add(GRU(50, activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True , input_shape=(n_steps_in, n_features)))
+model.add(GRU(70, activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True , input_shape=(n_steps_in, n_features)))
 model.add(Dropout(0.2))
-model.add(GRU(50 , activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True ))
+model.add(GRU(70 , activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True ))
 model.add(Dropout(0.2))
-model.add(GRU(50 , activation='tanh' , recurrent_activation='sigmoid'))
+model.add(GRU(70 , activation='tanh' , recurrent_activation='sigmoid'))
 model.add(Dense(n_steps_out))
 model.add(Activation('linear'))
 model.compile(loss='mae', optimizer=opt , metrics=['accuracy'])
@@ -230,8 +232,8 @@ print(model.summary())
 
 
 # # Fit network #increase the epochs for better model training
-history = model.fit(train_X , train_y , epochs=200, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
-model.save('Air_Pollution_200.h5')
+history = model.fit(train_X , train_y , epochs=300, batch_size=72 , verbose=2 ,validation_data=(test_X, test_y) ,shuffle=False)
+model.save('Air_Pollution_70.h5')
 
 plt.plot(history.history['loss'], label='train')
 plt.plot(history.history['val_loss'], label='test')

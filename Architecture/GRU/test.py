@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder , MinMaxScaler
 from numpy import hstack , array
 
-model = load_model("Air_Pollution.h5")
+model = load_model("Air_Pollution_70.h5")
 print(model.summary())
 
 dataset = pd.read_csv("test.csv" , header=0 , parse_dates=True)
@@ -89,8 +89,9 @@ print(dataset_test_X.shape[1])
 test_X_new = dataset_test_X.reshape(1,dataset_test_X.shape[0],dataset_test_X.shape[1])
 
 y_pred = model.predict(test_X_new)
+print(y_pred)
 print("Prediction of the data")
-y_pred_inv = scaler.inverse_transform(y_pred)
+y_pred_inv = y_pred*1000
 y_pred_inv = y_pred_inv.ravel()
 print(y_pred_inv)
 
@@ -98,8 +99,8 @@ Actual_data = [32 , 29 , 30 , 29 , 26 , 29 , 25 ,
  28 , 30 , 31 , 31 , 32 , 34 , 36 ,
  37 , 40 , 39 , 42 , 43 , 43 , 44 ,
  43 , 42 , 41 ]
-plt.figure(figsize=(10,6))
-plt.plot(y_pred_inv , c="orange" , label="Predicted")
-plt.plot(Actual_data , c="blue" , label="Actual")
+plt.figure(figsize=(20,14))
+plt.plot(y_pred_inv , color='tab:blue')
+plt.plot(Actual_data , color='tab:red')
 plt.legend()
 plt.show()
