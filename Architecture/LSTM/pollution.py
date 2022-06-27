@@ -180,8 +180,6 @@ model = Sequential()
 # model.add(Bidirectional(LSTM(50, activation='tanh' , input_shape=(n_steps_in, n_features))))
 model.add(LSTM(50, activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True , input_shape=(n_steps_in, n_features)))
 model.add(Dropout(0.2))
-model.add(LSTM(50 , activation='tanh' , recurrent_activation='sigmoid' , return_sequences=True ))
-model.add(Dropout(0.2))
 model.add(LSTM(50 , activation='tanh' , recurrent_activation='sigmoid'))
 model.add(Dense(n_steps_out))
 model.add(Activation('linear'))
@@ -190,9 +188,10 @@ model.compile(loss='mse' , optimizer=opt , metrics=['accuracy'])
 print(model.summary())
 
 
-# # Fit network #increase the epochs for better model training
-history = model.fit(train_X , train_y , epochs=100, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
-model.save('Air_Pollution_100.h5')
+# Fit network #increase the epochs for better model training
+# steps_per_epoch = 25
+history = model.fit(train_X , train_y , epochs=300, batch_size=72 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
+model.save('Air_Pollution.h5')
 
 plt.plot(history.history['loss'], label='train')
 plt.plot(history.history['val_loss'], label='test')
