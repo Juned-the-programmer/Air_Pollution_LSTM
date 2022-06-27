@@ -95,12 +95,13 @@ y_pred_inv = y_pred*1000
 y_pred_inv = y_pred_inv.ravel()
 print(y_pred_inv)
 
-Actual_data = [32 , 29 , 30 , 29 , 26 , 29 , 25 ,
- 28 , 30 , 31 , 31 , 32 , 34 , 36 ,
- 37 , 40 , 39 , 42 , 43 , 43 , 44 ,
- 43 , 42 , 41 ]
+Actual_data = [49 , 55 , 55 , 57 , 57 , 63 ,
+ 65 , 65 , 68 , 72 , 87 , 90 , 
+ 91 , 95 , 85 , 92 , 91 , 95 , 
+ 100 , 105 , 110 , 120 , 122 , 120 ]
 plt.figure(figsize=(20,14))
-plt.plot(y_pred_inv , color='tab:blue')
-plt.plot(Actual_data , color='tab:red')
+plt.plot(y_pred_inv , color='tab:blue' , label="Prediction values")
+plt.plot(Actual_data , color='tab:red' , label="Actual Values")
 plt.legend()
+plt.title("300 Epoch forecasting using 70 neurons")
 plt.show()
