@@ -191,13 +191,15 @@ print(model.summary())
 
 
 # # Fit network #increase the epochs for better model training
-history = model.fit(train_X , train_y , epochs=300, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
-model.save('Air_Pollution.h5')
+history = model.fit(train_X , train_y , epochs=100, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
+model.save('Air_Pollution_100.h5')
 
 plt.plot(history.history['loss'], label='train')
 plt.plot(history.history['val_loss'], label='test')
 plt.legend()
 plt.show()
+
+y_test_true = test_y
 
 testPredict = model.predict(test_X)
 print(testPredict.shape)
@@ -205,7 +207,7 @@ testPresict = testPredict.ravel()
 print(testPredict.shape)
 
 poll = np.array(dataset["pollution"])
-meaop = poll.mean()
+meanop = poll.mean()
 stdop = poll.std()
 y_test_true = y_test_true*stdop + meanop
 testPredict = testPredict*stdop + meanop
