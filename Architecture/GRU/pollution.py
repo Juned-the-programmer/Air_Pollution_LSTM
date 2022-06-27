@@ -163,10 +163,10 @@ dataset_stacked = hstack((x_1_scaled, x_2_scaled, x_3_scaled, x_4_scaled,
 print ("dataset_stacked.shape" , dataset_stacked.shape)
 print(dataset_stacked)
 
-corr = dataset_stacked.corr()
-plt.figure(figsize=(20,14)) 
-plot = sns.heatmap(corr , annot=True)
-plt.show()
+# corr = dataset_stacked.corr()
+# plt.figure(figsize=(20,14)) 
+# plot = sns.heatmap(corr , annot=True)
+# plt.show()
 
 #1. n_steps_in : Specify how much data we want to look back for prediction
 #2. n_step_out : Specify how much multi-step data we want to forecast
@@ -230,13 +230,15 @@ print(model.summary())
 
 
 # # Fit network #increase the epochs for better model training
-history = model.fit(train_X , train_y , epochs=300, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
-model.save('Air_Pollution.h5')
+history = model.fit(train_X , train_y , epochs=200, steps_per_epoch=25 , verbose=1 ,validation_data=(test_X, test_y) ,shuffle=False)
+model.save('Air_Pollution_200.h5')
 
 plt.plot(history.history['loss'], label='train')
 plt.plot(history.history['val_loss'], label='test')
 plt.legend()
 plt.show()
+
+y_test_true = test_y
 
 testPredict = model.predict(test_X)
 print(testPredict.shape)
@@ -244,14 +246,14 @@ testPresict = testPredict.ravel()
 print(testPredict.shape)
 
 poll = np.array(dataset["pollution"])
-meaop = poll.mean()
+meanop = poll.mean()
 stdop = poll.std()
 y_test_true = y_test_true*stdop + meanop
 testPredict = testPredict*stdop + meanop
 
 plt.figure(figsize=(15,6))
 plt.xlim([1000,1250])
-plt.yalbel("ppm")
+plt.ylabel("ppm")
 plt.xlabel("hrs")
 plt.plot(y_test_true , c="g" , alpha=0.90 , linewidth=2.5)
 plt.plot(testPredict , c = "g" , alpha=0.75)
@@ -259,3 +261,7 @@ plt.show()
 
 rmse = np.sqrt(mean_squared_error(y_test_true , testPredict))
 print("Test (Validation) RMSE = " , rmse)
+
+
+# 200 epoch => 3.40366628
+# 100 epoch => 7.04375111
