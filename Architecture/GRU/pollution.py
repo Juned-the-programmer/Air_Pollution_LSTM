@@ -231,9 +231,10 @@ model.compile(loss='mae', optimizer=opt , metrics=['accuracy'])
 print(model.summary())
 
 
-# # Fit network #increase the epochs for better model training
-history = model.fit(train_X , train_y , epochs=300, batch_size=72 , verbose=2 ,validation_data=(test_X, test_y) ,shuffle=False)
-model.save('Air_Pollution_70.h5')
+# Fit network increase the epochs for better model training
+# ste-Per_epoch=25
+history = model.fit(train_X , train_y , epochs=100, batch_size=72 , verbose=2 ,validation_data=(test_X, test_y) ,shuffle=False)
+model.save('Air_Pollution_70_100.h5')
 
 plt.plot(history.history['loss'], label='train')
 plt.plot(history.history['val_loss'], label='test')
@@ -263,7 +264,3 @@ plt.show()
 
 rmse = np.sqrt(mean_squared_error(y_test_true , testPredict))
 print("Test (Validation) RMSE = " , rmse)
-
-
-# 200 epoch => 3.40366628
-# 100 epoch => 7.04375111
