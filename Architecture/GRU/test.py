@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder , MinMaxScaler
 from numpy import hstack , array
 
-model = load_model("Air_Pollution_70.h5")
+model = load_model("Air_Pollution_70_100.h5")
 print(model.summary())
 
 dataset = pd.read_csv("test.csv" , header=0 , parse_dates=True)
@@ -103,5 +103,5 @@ plt.figure(figsize=(20,14))
 plt.plot(y_pred_inv , color='tab:blue' , label="Prediction values")
 plt.plot(Actual_data , color='tab:red' , label="Actual Values")
 plt.legend()
-plt.title("300 Epoch forecasting using 70 neurons")
+plt.title("100 Epoch forecasting using 70 neurons")
 plt.show()
