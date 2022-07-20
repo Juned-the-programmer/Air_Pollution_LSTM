@@ -17,3 +17,13 @@ https://towardsdatascience.com/gate-recurrent-units-explained-using-matrices-par
 https://12ft.io/proxy?q=http://towardsdatascience.com/lstm-networks-a-detailed-explanation-8fae6aefc7f9
 https://towardsdatascience.com/understanding-gru-networks-2ef37df6c9be
 https://www.analyticsvidhya.com/blog/2022/03/an-overview-on-long-short-term-memory-lstm/
+
+
+https://www.visualizefree.com/evaluate/visfree/
+kedepa2369@lenfly.com
+Juned7698@
+
+SE -> 1
+NE -> 2
+NE -> 3
+cv -> 4
